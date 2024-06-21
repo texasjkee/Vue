@@ -1,0 +1,29 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model event {
+  id       Int      @id @default(autoincrement())
+  name     String
+  isDone   Boolean
+  isPaid   Boolean
+  price    Int
+  date     DateTime
+  authorId Int
+  author   user     @relation(fields: [authorId], references: [id], map: "Event_authorId_fkey")
+
+  @@index([authorId], map: "Event_authorId_fkey")
+}
+
+model user {
+  id       Int     @id @default(autoincrement())
+  email    String  @unique(map: "User_email_key")
+  name     String?
+  password String?
+  event    event[]
+}
